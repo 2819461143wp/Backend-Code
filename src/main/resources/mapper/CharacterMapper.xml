@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.example.springboot.mapper.CharacterMapper">
+    <insert id="insertCharacter">
+        INSERT INTO characters (user_id, name, biography, avatar_url, fans_count, follow_count)
+        SELECT #{user_id}, username, '', '', 0, 0
+        FROM users WHERE id = #{user_id}
+    </insert>
+
+    <update id="updateCharacter">
+        UPDATE characters
+        SET name = #{name}, biography = #{biography}, avatar_url = #{avatar_url}
+        WHERE user_id = #{user_id}
+    </update>
+
+    <select id="getCharacterById" resultType="org.example.springboot.pojo.Character">
+        SELECT * FROM characters WHERE user_id = #{user_id}
+    </select>
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.example.springboot.mapper.ChatMapper">
+    <!-- 会话相关 -->
+    <insert id="insertConversation" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO chat_conversation (user_id, title, create_time, update_time)
+        VALUES (#{userId}, #{title}, #{createTime}, #{updateTime})
+    </insert>
+
+    <select id="selectConversationsByUserId" resultType="org.example.springboot.pojo.ChatConversation">
+        SELECT * FROM chat_conversation
+        WHERE user_id = #{userId}
+        ORDER BY update_time DESC
+    </select>
+
+    <select id="selectConversationById" resultType="org.example.springboot.pojo.ChatConversation">
+        SELECT * FROM chat_conversation WHERE id = #{id}
+    </select>
+
+    <update id="updateConversation">
+        UPDATE chat_conversation
+        SET title = #{title},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 消息相关 -->
+    <insert id="insertMessage" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO chat_message (user_id, conversation_id, role, content, create_time)
+        VALUES (#{userId}, #{conversationId}, #{role}, #{content}, #{createTime})
+    </insert>
+
+    <select id="selectMessagesByConversationId" resultType="org.example.springboot.pojo.ChatMessage">
+        SELECT * FROM chat_message
+        WHERE conversation_id = #{conversationId}
+        ORDER BY create_time ASC
+    </select>
+
+    <select id="selectLastMessageByConversationId" resultType="org.example.springboot.pojo.ChatMessage">
+        SELECT * FROM chat_message
+        WHERE conversation_id = #{conversationId}
+        ORDER BY create_time DESC
+            LIMIT 1
+    </select>
+</mapper>

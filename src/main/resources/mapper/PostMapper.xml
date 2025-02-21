@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.example.springboot.mapper.PostMapper">
+
+    <insert id="insertPost">
+        INSERT INTO posts (user_id,title, content, created_at,updated_at,image_url)
+        VALUES (#{user_id}, #{title}, #{content}, #{created_at}, #{updated_at},#{image_url})
+    </insert>
+
+    <update id="updatePost">
+        UPDATE posts
+        SET title = #{title}, content = #{content}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getPostById" resultType="org.example.springboot.pojo.Post">
+        SELECT * FROM posts WHERE id=#{id}
+    </select>
+
+    <select id="getAllPosts" resultType="org.example.springboot.pojo.Post">
+        SELECT * FROM posts
+    </select>
+
+</mapper>
