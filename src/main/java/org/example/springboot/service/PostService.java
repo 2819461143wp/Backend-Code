@@ -21,7 +21,7 @@ public class PostService {
         return postMapper.getPostById(id);
     }
 
-    // 插入帖子
+    // 新建帖子
     public boolean insertPost(Integer user_id, String title, String content, String image_url) {
         Post post = new Post();
         post.setUser_id(user_id);

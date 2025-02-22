@@ -20,5 +20,4 @@
     <select id="getAllPosts" resultType="org.example.springboot.pojo.Post">
         SELECT * FROM posts
     </select>
-
 </mapper>
