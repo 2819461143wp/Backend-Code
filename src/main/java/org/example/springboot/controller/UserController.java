@@ -5,7 +5,6 @@ import org.example.springboot.service.CharacterService;
 import org.example.springboot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Map;
 
 @RestController
@@ -17,11 +16,10 @@ public class UserController{
     private CharacterService characterService;
 
     @PostMapping("/login")
-    public String login(@RequestBody Map<String, Object> payload) {
+    public User login(@RequestBody Map<String, Object> payload) {
         String username = (String) payload.get("username");
         String password = (String) payload.get("password");
-        boolean result = userService.login(username, password);
-        return result ? "登录成功" : "登录失败";
+        return userService.login(username, password);
     }
 
     @PostMapping("/register")
@@ -33,9 +31,8 @@ public class UserController{
         return result ? "注册成功" : "注册失败";
     }
 
-    @GetMapping("/{username}")
-    public User getUserByUsername(@PathVariable String username) {
-        return userService.findByUsername(username);
-    }
-
+//    @GetMapping("/{username}")
+//    public User getUserByUsername(@PathVariable String username) {
+//        return userService.findByUsername(username);
+//    }
 }

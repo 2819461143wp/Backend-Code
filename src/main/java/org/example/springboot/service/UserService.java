@@ -9,9 +9,8 @@ import org.springframework.stereotype.Service;
 public class UserService {
     @Autowired
     private UserMapper userMapper;
-    public boolean login(String username, String password) {
-        User user = userMapper.findByUsernameAndPassword(username, password);
-        return user != null;
+    public User login(String username, String password) {
+        return userMapper.findByUsernameAndPassword(username, password);
     }
     //返回值为用户id
     public Integer register(String username, String password) {

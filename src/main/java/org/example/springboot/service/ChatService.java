@@ -42,7 +42,6 @@ public class ChatService {
                 chatMapper.insertConversation(conversation);
                 conversationId = conversation.getId();
             }
-
             // 保存用户消息
             ChatMessage userMessage = new ChatMessage();
             userMessage.setUserId(userId);
