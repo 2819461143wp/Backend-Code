@@ -19,8 +19,10 @@
 
     <update id="updateConversation">
         UPDATE chat_conversation
-        SET title = #{title},
-            update_time = #{updateTime}
+        <set>
+            <if test="title != null">title = #{title},</if>
+            <if test="updateTime != null">update_time = #{updateTime}</if>
+        </set>
         WHERE id = #{id}
     </update>
 

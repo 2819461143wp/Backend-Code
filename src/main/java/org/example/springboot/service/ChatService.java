@@ -29,6 +29,19 @@ public class ChatService {
     private final OkHttpClient client = new OkHttpClient();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    public String updateConversationTitle(Long conversationId, String title) {
+        try {
+            ChatConversation conversation = new ChatConversation();
+            conversation.setId(conversationId);
+            conversation.setTitle(title);
+            conversation.setUpdateTime(LocalDateTime.now());
+            chatMapper.updateConversation(conversation);
+            return "更新成功";
+        } catch (Exception e) {
+            return "更新失败: " + e.getMessage();
+        }
+    }
+
     @Transactional
     public ChatResponse sendMessage(Integer userId, String message, Long conversationId) {
         try {
@@ -36,7 +49,7 @@ public class ChatService {
             if (conversationId == null) {
                 ChatConversation conversation = new ChatConversation();
                 conversation.setUserId(userId);
-                conversation.setTitle(message.length() > 20 ? message.substring(0, 20) + "..." : message);
+                conversation.setTitle(message.length() > 10 ? message.substring(0, 10) + "..." : message);
                 conversation.setCreateTime(LocalDateTime.now());
                 conversation.setUpdateTime(LocalDateTime.now());
                 chatMapper.insertConversation(conversation);

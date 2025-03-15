@@ -14,4 +14,5 @@ public interface PostMapper {
 
     // 获取所有帖子
     List<Post> getAllPosts();
+    List<Post> getPosts(Integer status);
 }

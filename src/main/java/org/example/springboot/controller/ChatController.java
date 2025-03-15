@@ -29,6 +29,14 @@ public class ChatController {
         return ResponseEntity.ok(conversations);
     }
 
+    @GetMapping("/updateConversationTitle")
+    public ResponseEntity<List<ChatConversation>> updateConversationTitle(@RequestParam Integer userId,@RequestParam Long conversationId, @RequestParam String title) {
+        String result = chatService.updateConversationTitle(conversationId, title);
+        System.out.println(result);
+        List<ChatConversation> conversations = chatService.getConversations(userId);
+        return ResponseEntity.ok(conversations);
+    }
+
     @GetMapping("/messages")
     public ResponseEntity<List<ChatMessage>> getMessages(@RequestParam Long conversationId) {
         List<ChatMessage> messages = chatService.getMessages(conversationId);

@@ -13,4 +13,5 @@ public class Post {
     private String is_deleted;
     private String image_url;
     private Integer stars_count;
+    private Integer status;
 }

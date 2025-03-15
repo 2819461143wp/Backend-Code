@@ -3,8 +3,8 @@
 <mapper namespace="org.example.springboot.mapper.PostMapper">
 
     <insert id="insertPost">
-        INSERT INTO posts (user_id,title, content, created_at,updated_at,image_url)
-        VALUES (#{user_id}, #{title}, #{content}, #{created_at}, #{updated_at},#{image_url})
+        INSERT INTO posts (user_id,title, content, created_at,updated_at,image_url,status)
+        VALUES (#{user_id}, #{title}, #{content}, #{created_at}, #{updated_at},#{image_url},#{status})
     </insert>
 
     <update id="updatePost">
@@ -18,6 +18,10 @@
     </select>
 
     <select id="getAllPosts" resultType="org.example.springboot.pojo.Post">
-        SELECT * FROM posts
+        SELECT * FROM posts WHERE is_deleted = false ORDER BY created_at DESC
+    </select>
+
+    <select id="getPosts" resultType="org.example.springboot.pojo.Post">
+        SELECT * FROM posts WHERE status=#{status} AND is_deleted = false ORDER BY created_at DESC
     </select>
 </mapper>

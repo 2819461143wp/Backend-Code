@@ -36,18 +36,36 @@ public class PostController {
         return postService.updatePost(post);
     }
 
-    @GetMapping("GetPosts")
+    @GetMapping("GetAllPosts")
     public Map<String, Object> getPosts(
             @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize
     ) {
-        // 使用 PageHelper 实现分页
-        PageHelper.startPage(pageNum, pageSize);
-        List<Post> posts = postService.getPostsByPage(pageNum, pageSize).getList();
+        // 使用 PageHelper 实现分页和排序
+        PageHelper.startPage(pageNum, pageSize, "created_at DESC");  // 合并分页和排序
+        List<Post> posts = postService.getAllPostsByPage(pageNum, pageSize).getList();
         PageInfo<Post> pageInfo = new PageInfo<>(posts);
         Map<String, Object> result = new HashMap<>();
         result.put("posts", pageInfo.getList());
         result.put("total", pageInfo.getTotal());
+        result.put("pages", pageInfo.getPages());
+        return result;
+    }
+
+    @GetMapping("GetPosts")
+    public Map<String, Object> getPosts(
+            @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+            @RequestParam(value = "status", defaultValue = "0") int status
+    ) {
+        // 使用 PageHelper 实现分页
+        PageHelper.startPage(pageNum, pageSize);
+        List<Post> posts = postService.getPostsByPage(pageNum, pageSize,status).getList();
+        PageInfo<Post> pageInfo = new PageInfo<>(posts);
+        Map<String, Object> result = new HashMap<>();
+        result.put("posts", pageInfo.getList());
+        result.put("total", pageInfo.getTotal());
+        result.put("pages", pageInfo.getPages());
         return result;
     }
 
@@ -56,7 +74,8 @@ public class PostController {
             @RequestParam("user_id") Integer user_id,
             @RequestParam("title") String title,
             @RequestParam("content") String content,
-            @RequestParam(value = "file", required = false) MultipartFile file) {
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam("status") Integer status){
         try {
             // 创建上传目录
             File uploadDir = new File(PostImage);
@@ -76,12 +95,13 @@ public class PostController {
             } else {
                 System.out.println("文件为空或不存在");
             }
-            // 更新用户信息
-            boolean flag = postService.insertPost(user_id, title, content, image_url);
+            boolean flag = postService.insertPost(user_id, title, content, image_url,status);
+            System.out.println("插入贴子成功");
             if (!flag) {
                 System.out.println("service部分出错了");
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("service部分出错了");
             }
+
             return ResponseEntity.ok("发表贴子成功");
         } catch (IOException e) {
             System.out.println("未执行try部分: " + e.getMessage());
