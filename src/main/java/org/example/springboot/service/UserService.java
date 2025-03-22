@@ -5,6 +5,8 @@ import org.example.springboot.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
     @Autowired
@@ -21,7 +23,12 @@ public class UserService {
         User u = userMapper.findByUsername(username);
         return u.getId();
     }
-    public User findByUsername(String username) {
-        return userMapper.findByUsername(username);
+
+    public List<User> getUser() {
+        return userMapper.getUser();
+    }
+
+    public int updateUser(User user) {
+        return userMapper.updateUser(user);
     }
 }

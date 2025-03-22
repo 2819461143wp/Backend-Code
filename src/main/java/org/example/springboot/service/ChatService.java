@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ChatService {
@@ -26,7 +27,11 @@ public class ChatService {
     @Autowired
     private ChatMapper chatMapper;
 
-    private final OkHttpClient client = new OkHttpClient();
+    private final OkHttpClient client = new OkHttpClient.Builder()
+            .connectTimeout(90, TimeUnit.SECONDS)
+            .writeTimeout(90, TimeUnit.SECONDS)
+            .readTimeout(90, TimeUnit.SECONDS)
+            .build();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public String updateConversationTitle(Long conversationId, String title) {

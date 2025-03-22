@@ -101,7 +101,6 @@ public class PostController {
                 System.out.println("service部分出错了");
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("service部分出错了");
             }
-
             return ResponseEntity.ok("发表贴子成功");
         } catch (IOException e) {
             System.out.println("未执行try部分: " + e.getMessage());

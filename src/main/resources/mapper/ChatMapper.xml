@@ -8,7 +8,13 @@
     </insert>
 
     <select id="selectConversationsByUserId" resultType="org.example.springboot.pojo.ChatConversation">
-        SELECT * FROM chat_conversation
+        SELECT
+            id,
+            user_id AS userId,
+            title,
+            create_time AS createTime,
+            update_time AS updateTime
+        FROM chat_conversation
         WHERE user_id = #{userId}
         ORDER BY update_time DESC
     </select>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.example.springboot.mapper.FileRecordMapper">
+    <insert id="insertFileRecord">
+        INSERT INTO file_records (hash, file_path, upload_time, operator)
+        VALUES (#{hash}, #{filePath}, #{uploadTime}, #{operator})
+    </insert>
+    <select id="selectByHash" resultType="org.example.springboot.pojo.FileRecord">
+        SELECT * FROM file_records WHERE hash = #{hash}
+    </select>
+
+
+</mapper>

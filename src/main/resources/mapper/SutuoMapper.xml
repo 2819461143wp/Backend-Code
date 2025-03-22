@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.example.springboot.mapper.SutuoMapper">
+    <insert id="InsertSutuo">
+        INSERT INTO sutuo
+        (student_id, activity, deyu, zhiyu, meiyu, tiyu, xiaoyuan, xiangtu,
+         chanxue, jiating, qingshi, volunteer_time, file_hash)
+        VALUES
+            (#{studentId}, #{activity}, #{deyu}, #{zhiyu}, #{meiyu}, #{tiyu},
+             #{xiaoyuan}, #{xiangtu}, #{chanxue}, #{jiating}, #{qingshi},
+             #{volunteerTime}, #{fileHash})
+    </insert>
+
+    <update id="UpdateSutuo">
+        UPDATE sutuo
+        SET activity = #{activity},
+            deyu = #{deyu},
+            zhiyu = #{zhiyu},
+            meiyu = #{meiyu},
+            tiyu = #{tiyu},
+            xiaoyuan = #{xiaoyuan},
+            xiangtu = #{xiangtu},
+            chanxue = #{chanxue},
+            jiating = #{jiating},
+            qingshi = #{qingshi},
+            volunteer_time = #{volunteer_time}
+        WHERE student_id = #{student_id}
+    </update>
+    <select id="SelectSutuo" resultType="org.example.springboot.pojo.Sutuo">
+        SELECT
+            id,
+            student_id as studentId,
+            activity,
+            deyu,
+            zhiyu,
+            meiyu,
+            tiyu,
+            xiaoyuan,
+            xiangtu,
+            chanxue,
+            jiating,
+            qingshi,
+            CAST(volunteer_time AS DECIMAL(10,2)) as volunteer_time,
+            file_hash as fileHash
+        FROM sutuo
+        WHERE student_id = #{student_id}
+        ORDER BY id DESC
+            LIMIT 30
+    </select>
+
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.example.springboot.mapper.StudentMapper">
+    <insert id="InsertStudent">
+        INSERT INTO students (id,user_id,student_name,academy,class_name,deyu,zhiyu,meiyu,tiyu,xiaoyuan,xiangtu,chanxue,jiating,qingshi,volunteer_time)
+        VALUES (#{id},#{userId},#{studentName},#{academy},#{className},#{deyu},#{zhiyu},#{meiyu},#{tiyu},#{xiaoyuan},#{xiangtu},#{chanxue},#{jiating},#{qingshi},#{volunteerTime})
+    </insert>
+    <update id="UpdateStudent" parameterType="org.example.springboot.pojo.Sutuo">
+        UPDATE students
+        SET deyu = deyu + #{deyu},
+            zhiyu = zhiyu + #{zhiyu},
+            meiyu = meiyu + #{meiyu},
+            tiyu = tiyu + #{tiyu},
+            xiaoyuan = xiaoyuan + #{xiaoyuan},
+            xiangtu = xiangtu + #{xiangtu},
+            chanxue = chanxue + #{chanxue},
+            jiating = jiating + #{jiating},
+            qingshi = qingshi + #{qingshi},
+            volunteer_time = volunteer_time + #{volunteer_time}
+        WHERE id = #{student_id}
+    </update>
+
+    <select id="SelectStudent" resultType="org.example.springboot.pojo.Student">
+        SELECT * FROM students
+        WHERE user_id = #{user_id}
+    </select>
+</mapper>

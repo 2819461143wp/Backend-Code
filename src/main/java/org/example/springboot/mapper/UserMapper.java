@@ -3,12 +3,16 @@ package org.example.springboot.mapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.example.springboot.pojo.User;
 
+import java.util.List;
+
 
 @Mapper
 public interface UserMapper {
     User findByUsernameAndPassword(String username, String password);
     int insertUser(User user);
     User findByUsername(String username);
+    List<User> getUser();
+    int updateUser(User user);
 }
 
 //@Mapper
