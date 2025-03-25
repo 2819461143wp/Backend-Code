@@ -33,7 +33,7 @@ public class CharacterService {
             character.setBiography(biography);
         }
         if (avatar_url != null && !avatar_url.isEmpty()) {
-            character.setAvatar_url(avatar_url);
+            character.setAvatarUrl(avatar_url);
         }
         Integer result = CharacterMapper.updateCharacter(character);
         return result > 0;

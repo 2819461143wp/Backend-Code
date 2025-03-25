@@ -24,16 +24,16 @@ public class PostService {
     // 新建帖子
     public boolean insertPost(Integer user_id, String title, String content, String image_url, Integer status) {
         Post post = new Post();
-        post.setUser_id(user_id);
+        post.setUserId(user_id);
         post.setTitle(title);
         post.setContent(content);
-        post.setImage_url(image_url);
+        post.setImageUrl(image_url);
         post.setStatus(status);
         // 设置创建时间和更新时间
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String createAt = dateFormat.format(new Date());
-        post.setCreated_at(createAt);
-        post.setUpdated_at(createAt);
+        post.setCreatedAt(createAt);
+        post.setUpdatedAt(createAt);
         int result = postMapper.insertPost(post);
         return result > 0;
     }

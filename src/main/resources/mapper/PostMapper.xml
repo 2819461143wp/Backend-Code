@@ -4,7 +4,7 @@
 
     <insert id="insertPost">
         INSERT INTO posts (user_id,title, content, created_at,updated_at,image_url,status)
-        VALUES (#{user_id}, #{title}, #{content}, #{created_at}, #{updated_at},#{image_url},#{status})
+        VALUES (#{userId}, #{title}, #{content}, #{createdAt}, #{updatedAt},#{imageUrl},#{status})
     </insert>
 
     <update id="updatePost">

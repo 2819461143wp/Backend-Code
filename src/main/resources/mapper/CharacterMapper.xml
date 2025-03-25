@@ -3,17 +3,17 @@
 <mapper namespace="org.example.springboot.mapper.CharacterMapper">
     <insert id="insertCharacter">
         INSERT INTO characters (user_id, name, biography, avatar_url, fans_count, follow_count)
-        SELECT #{user_id}, username, '', '', 0, 0
-        FROM users WHERE id = #{user_id}
+        SELECT #{userId}, username, '', '', 0, 0
+        FROM users WHERE id = #{userId}
     </insert>
 
     <update id="updateCharacter">
         UPDATE characters
-        SET name = #{name}, biography = #{biography}, avatar_url = #{avatar_url}
-        WHERE user_id = #{user_id}
+        SET name = #{name}, biography = #{biography}, avatar_url = #{avatarUrl}
+        WHERE user_id = #{userId}
     </update>
 
     <select id="getCharacterById" resultType="org.example.springboot.pojo.Character">
-        SELECT * FROM characters WHERE user_id = #{user_id}
+        SELECT * FROM characters WHERE user_id = #{userId}
     </select>
 </mapper>
