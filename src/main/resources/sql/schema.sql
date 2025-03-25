@@ -1,7 +1,7 @@
 CREATE TABLE users (
                       id INT AUTO_INCREMENT PRIMARY KEY, -- 用户ID
                       username VARCHAR(50) NOT NULL,    -- 用户名
-                      password VARCHAR(50) NOT NULL    -- 密码
+                      password VARCHAR(50) NOT NULL,    -- 密码（添加了逗号）
                       role VARCHAR(20) DEFAULT 'USER'   -- 用户角色
 );
 
@@ -17,11 +17,11 @@ CREATE TABLE characters (
 );
 
 CREATE TABLE students (
-                          id VARCHAR(50) AUTO_INCREMENT PRIMARY KEY, -- 学生ID
+                          id VARCHAR(50) PRIMARY KEY, -- 移除了VARCHAR类型不兼容的AUTO_INCREMENT
                           user_id INT,              -- 发帖用户的ID（外键）
                           student_name VARCHAR(50) NOT NULL, -- 学生姓名
                           academy VARCHAR(50) NOT NULL,      -- 学院
-                          Class VARCHAR(50) NOT NULL,        -- 班级
+                          class_name VARCHAR(50) NOT NULL,        -- 班级
                           deyu INT,
                           zhiyu INT,
                           meiyu INT,
@@ -61,7 +61,6 @@ CREATE TABLE file_records (
                               operator_id VARCHAR(50)       -- 操作人（可选）
 );
 
-
 CREATE TABLE posts (
                        id INT AUTO_INCREMENT PRIMARY KEY,
                        user_id INT,              -- 发帖用户的ID（外键）
@@ -71,10 +70,9 @@ CREATE TABLE posts (
                        created_at TIMESTAMP,     -- 发布时间
                        updated_at TIMESTAMP,     -- 更新时间
                        is_deleted BOOLEAN DEFAULT 0, -- 是否删除标记
-                       status INT DEFAULT 0，
+                       status INT DEFAULT 0,     -- 将中文逗号替换为正确的英文逗号
                        FOREIGN KEY (user_id) REFERENCES users(id)
 );
-
 
 CREATE TABLE comments (
                           id INT AUTO_INCREMENT PRIMARY KEY,
