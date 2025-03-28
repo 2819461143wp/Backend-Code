@@ -48,7 +48,7 @@ public class SutuoController {
             String fileHash = fileService.processUpload(file, operator);
 
             // 2. 解析Excel数据
-            List<Sutuo> sutuos = excelParser.parseExcel(file, fileHash);
+            List<Sutuo> sutuos = excelParser.parseSutoExcel(file, fileHash);
             // 3. 批量插入并更新总分
             sutuoService.batchInsertWithScoreUpdate(sutuos);
 

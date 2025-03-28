@@ -2,7 +2,7 @@ CREATE TABLE users (
                       id INT AUTO_INCREMENT PRIMARY KEY, -- 用户ID
                       username VARCHAR(50) NOT NULL,    -- 用户名
                       password VARCHAR(50) NOT NULL,    -- 密码（添加了逗号）
-                      role VARCHAR(20) DEFAULT 'USER'   -- 用户角色
+                      role VARCHAR(20) DEFAULT 'user'   -- 用户角色
 );
 
 CREATE TABLE characters (
@@ -22,16 +22,16 @@ CREATE TABLE students (
                           student_name VARCHAR(50) NOT NULL, -- 学生姓名
                           academy VARCHAR(50) NOT NULL,      -- 学院
                           class_name VARCHAR(50) NOT NULL,        -- 班级
-                          deyu INT,
-                          zhiyu INT,
-                          meiyu INT,
-                          tiyu INT,
-                          xiaoyuan INT,
-                          xiangtu INT,
-                          chanxue INT,
-                          jiating INT,
-                          qingshi INT,
-                          volunteer_time FLOAT,
+                          deyu INT DEFAULT 0,
+                          zhiyu INT DEFAULT 0,
+                          meiyu INT DEFAULT 0,
+                          tiyu INT DEFAULT 0,
+                          xiaoyuan INT DEFAULT 0,
+                          xiangtu INT DEFAULT 0,
+                          chanxue INT DEFAULT 0,
+                          jiating INT DEFAULT 0,
+                          qingshi INT DEFAULT 0,
+                          volunteer_time FLOAT DEFAULT 0,
                           FOREIGN KEY (user_id) REFERENCES users(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
