@@ -1,5 +1,6 @@
 package org.example.springboot.service;
 
+import com.github.pagehelper.PageHelper;
 import org.example.springboot.mapper.StudentMapper;
 import org.example.springboot.mapper.SutuoMapper;
 import org.example.springboot.pojo.Student;
@@ -18,8 +19,6 @@ public class SutuoService {
     @Autowired
     private StudentMapper studentMapper;
 
-
-
     @Transactional
     public void batchInsertWithScoreUpdate(List<Sutuo> sutuos) {
         try {
@@ -33,7 +32,7 @@ public class SutuoService {
 
                 try {
                     // 更新学生总分
-                    studentMapper.UpdateStudent(sutuo);
+                    studentMapper.AddStudent(sutuo);
                 } catch (Exception e) {
                     throw new RuntimeException("更新学生总分失败，学生ID: " + sutuo.getStudentId() + ", 错误: " + e.getMessage());
                 }
@@ -43,11 +42,51 @@ public class SutuoService {
             throw new RuntimeException("批量处理失败: " + e.getMessage());
         }
     }
-    public boolean UpdateSutuo(Sutuo sutuo) {
-        return sutuoMapper.UpdateSutuo(sutuo) == 1;
+    @Transactional
+    public boolean UpdateSutuo(Sutuo newSutuo) {
+        // 1. 先获取原始素拓记录
+        Sutuo oldSutuo = sutuoMapper.getSutuoById(newSutuo.getId());
+        if (oldSutuo == null) {
+            return false;
+        }
+        try {
+            studentMapper.ReduceStudent(oldSutuo);
+            sutuoMapper.UpdateSutuo(newSutuo);
+            studentMapper.AddStudent(newSutuo);
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException("更新素拓记录失败: " + e.getMessage());
+        }
     }
-
     public List<Sutuo> SelectSutuo(String student_id) {
         return sutuoMapper.SelectSutuo(student_id);
+    }
+
+    public List<Sutuo> getAllSutuosByPage(Integer pageNum, Integer pageSize, String studentId, String activity) {
+        PageHelper.startPage(pageNum, pageSize, "id DESC");
+        if (studentId == null && activity == null) {
+            return sutuoMapper.getAllSutuosByPage();
+        }
+        return sutuoMapper.searchSutuos(studentId, activity);
+    }
+
+    @Transactional
+    public boolean deleteSutuo(Integer id) {
+        // 1. 先获取素拓记录
+        Sutuo sutuo = sutuoMapper.getSutuoById(id);
+        if (sutuo == null) {
+            return false;
+        }
+
+        try {
+            // 2. 减去学生分数
+            studentMapper.ReduceStudent(sutuo);
+
+            // 3. 删除素拓记录
+            sutuoMapper.deleteSutuo(id);
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException("删除素拓记录失败: " + e.getMessage());
+        }
     }
 }

@@ -9,5 +9,9 @@ import java.util.List;
 public interface SutuoMapper {
     Integer InsertSutuo(Sutuo sutuo);
     Integer UpdateSutuo(Sutuo sutuo);
+    Integer deleteSutuo(Integer id);
+    Sutuo getSutuoById(Integer id);
     List<Sutuo> SelectSutuo(String student_id);
+    List<Sutuo> getAllSutuosByPage();
+    List<Sutuo> searchSutuos(String studentId, String activity);
 }

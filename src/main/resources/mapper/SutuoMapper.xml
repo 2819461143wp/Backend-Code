@@ -23,9 +23,13 @@
             chanxue = #{chanxue},
             jiating = #{jiating},
             qingshi = #{qingshi},
-            volunteer_time = #{volunteer_time}
-        WHERE student_id = #{student_id}
+            volunteer_time = #{volunteerTime}
+        WHERE id = #{id}
     </update>
+    <delete id="deleteSutuo">
+        DELETE FROM sutuo
+        WHERE id = #{id}
+    </delete>
     <select id="SelectSutuo" resultType="org.example.springboot.pojo.Sutuo">
         SELECT
             id,
@@ -48,5 +52,23 @@
             LIMIT 30
     </select>
 
+    <select id="getAllSutuosByPage" resultType="org.example.springboot.pojo.Sutuo">
+        select * from sutuo
+    </select>
 
+    <select id="searchSutuos" resultType="org.example.springboot.pojo.Sutuo">
+        SELECT * FROM sutuo
+        <where>
+            <if test="studentId != null and studentId != ''">
+                AND student_id LIKE CONCAT('%', #{studentId}, '%')
+            </if>
+            <if test="activity != null and activity != ''">
+                AND activity LIKE CONCAT('%', #{activity}, '%')
+            </if>
+        </where>
+    </select>
+    <select id="getSutuoById" resultType="org.example.springboot.pojo.Sutuo">
+        SELECT * FROM sutuo
+        WHERE id = #{id}
+    </select>
 </mapper>

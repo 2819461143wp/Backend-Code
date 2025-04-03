@@ -1,5 +1,6 @@
 package org.example.springboot.controller;
 
+import com.github.pagehelper.PageInfo;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.mapper.FileRecordMapper;
 import org.example.springboot.pojo.FileRecord;
@@ -85,6 +86,50 @@ public class SutuoController {
                     .body(resource);
         } catch (Exception e) {
             throw new RuntimeException("文件下载失败", e);
+        }
+    }
+
+    @GetMapping("/getsutuos")
+    public Map<String, Object> getDams(
+            @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+            @RequestParam(value = "studentId", required = false) String studentId,
+            @RequestParam(value = "activity", required = false) String activity
+    ) {
+        List<Sutuo> sutuos = sutuoService.getAllSutuosByPage(pageNum, pageSize, studentId, activity);
+        PageInfo<Sutuo> pageInfo = new PageInfo<>(sutuos);
+        Map<String, Object> result = new HashMap<>();
+        result.put("sutuos", pageInfo.getList());
+        result.put("total", pageInfo.getTotal());
+        result.put("pages", pageInfo.getPages());
+        return result;
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<String> updateSutuo(@RequestBody Sutuo sutuo) {
+        try {
+            boolean result = sutuoService.UpdateSutuo(sutuo);
+            if (result) {
+                return ResponseEntity.ok("更新成功");
+            } else {
+                return ResponseEntity.badRequest().body("更新失败");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("更新出错：" + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteSutuo(@PathVariable Integer id) {
+        try {
+            boolean result = sutuoService.deleteSutuo(id);
+            if (result) {
+                return ResponseEntity.ok("删除成功");
+            } else {
+                return ResponseEntity.badRequest().body("删除失败");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("删除出错：" + e.getMessage());
         }
     }
 }

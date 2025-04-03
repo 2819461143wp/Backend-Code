@@ -32,9 +32,4 @@ public class StudentController {
         StudentResponse response = new StudentResponse(student, sutuoList);
         return ResponseEntity.ok(response);
     }
-
-    @GetMapping("/a")
-    public Student aStudent(@RequestParam Integer user_id) {
-        return studentService.SelectStudent(user_id);
-    }
 }

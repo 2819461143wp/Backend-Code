@@ -7,6 +7,8 @@ import org.example.springboot.pojo.Sutuo;
 @Mapper
 public interface StudentMapper {
     Integer InsertStudent(Student student);
-    Integer UpdateStudent(Sutuo sutuo);
+    Integer AddStudent(Sutuo sutuo);
+    Integer ReduceStudent(Sutuo sutuo);
     Student SelectStudent(Integer user_id);
+
 }

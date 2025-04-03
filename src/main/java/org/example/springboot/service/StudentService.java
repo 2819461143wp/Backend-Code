@@ -15,10 +15,6 @@ public class StudentService {
         return studentMapper.InsertStudent(student) == 1;
     }
 
-    public boolean UpdateStudent(Sutuo sutuo) {
-        return studentMapper.UpdateStudent(sutuo) == 1;
-    }
-
     public Student SelectStudent(Integer user_id) {
         return studentMapper.SelectStudent(user_id);
     }
