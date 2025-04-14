@@ -13,6 +13,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+//import org.springframework.ai.chat.ChatClient;
+////import org.springframework.ai.chat.ChatResponse;
+//import org.springframework.ai.chat.messages.Message;
+//import org.springframework.ai.chat.messages.UserMessage;
+//import org.springframework.ai.chat.messages.SystemMessage;
+//import org.springframework.beans.factory.annotation.Autowired;
+//
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
@@ -26,6 +34,8 @@ public class ChatService {
 
     @Autowired
     private ChatMapper chatMapper;
+//    @Autowired
+//    private ChatClient chatClient;
 
     private final OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(90, TimeUnit.SECONDS)
@@ -101,6 +111,16 @@ public class ChatService {
             return response;
         }
     }
+//    private String callDeepseekAPI(String message) {
+//        Message systemMessage = new SystemMessage("You are a helpful assistant");
+//        Message userMessage = new UserMessage(message);
+//        List<Message> messages = new ArrayList<>();
+//        messages.add(systemMessage);
+//        messages.add(userMessage);
+//
+//        org.springframework.ai.chat.ChatResponse response = chatClient.generate(messages);
+//        return response.getGeneration().getContent();
+//    }
 
     private String callDeepseekAPI(String message) throws Exception {
         // 创建请求体的 JSON 对象

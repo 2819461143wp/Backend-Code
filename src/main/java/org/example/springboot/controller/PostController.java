@@ -26,10 +26,10 @@ public class PostController {
     @Autowired
     private PostService postService;
 
-    @GetMapping("/person/{id}")
-    public Post getPostById(@PathVariable Integer id) {
-        return postService.getPostById(id);
-    }
+//    @GetMapping("/person/{id}")
+//    public Post getPostById(@PathVariable Integer id) {
+//        return postService.getPostById(id);
+//    }
 
     @PostMapping("Update")
     public boolean updatePost(@RequestBody Post post) {
@@ -105,6 +105,82 @@ public class PostController {
         } catch (IOException e) {
             System.out.println("未执行try部分: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("发表贴子失败");
+        }
+    }
+
+    // 获取待审核的贴子列表
+    @GetMapping("/admin/allow")
+    public Map<String, Object> getPendingPosts(
+            @RequestParam(value = "page", defaultValue = "1") int pageNum,
+            @RequestParam(value = "size", defaultValue = "10") int pageSize
+    ) {
+        // 设置 allow=0 表示获取待审核的帖子
+        PageInfo<Post> pageInfo = postService.adminGetAllPosts(pageNum, pageSize, null, null, 0);
+        Map<String, Object> result = new HashMap<>();
+        result.put("records", pageInfo.getList());
+        result.put("total", pageInfo.getTotal());
+        result.put("pages", pageInfo.getPages());
+        return result;
+    }
+
+    // 贴子审核
+    @PutMapping("/admin/{id}/allow")
+    public ResponseEntity<?> reviewPost(
+            @PathVariable Integer id,
+            @RequestBody Map<String, Integer> body) {
+        Integer allow = body.get("allow");
+        if (allow == null || (allow != 1 && allow != 2)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        boolean success = postService.updatePostAllow(id, allow);
+        return success ?
+                ResponseEntity.ok().build() :
+                ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @GetMapping("/admin/posts")
+    public Map<String, Object> getPosts(
+            @RequestParam(value = "page", defaultValue = "1") int pageNum,
+            @RequestParam(value = "size", defaultValue = "10") int pageSize,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) Integer status,
+            @RequestParam(required = false) Integer allow
+    ) {
+        PageInfo<Post> pageInfo = postService.adminGetAllPosts(pageNum, pageSize, title, status, allow);
+        Map<String, Object> result = new HashMap<>();
+        result.put("records", pageInfo.getList());
+        result.put("total", pageInfo.getTotal());
+        result.put("pages", pageInfo.getPages());
+        return result;
+    }
+    
+    //贴子列表修改审核状态
+    @PutMapping("/admin/posts/{id}/allow")
+    public ResponseEntity<?> updatePostAllow(
+            @PathVariable Integer id,
+            @RequestBody Map<String, Integer> body) {
+        boolean success = postService.updatePostAllow(id, body.get("allow"));
+        return success ?
+                ResponseEntity.ok().build() :
+                ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @DeleteMapping("/admin/posts/{id}")
+    public ResponseEntity<?> deletePost(@PathVariable Integer id) {
+        boolean success = postService.deletePost(id);
+        return success ?
+                ResponseEntity.ok().build() :
+                ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @GetMapping("/admin/posts/{id}")
+    public ResponseEntity<Post> getPostById(@PathVariable Integer id) {
+        Post post = postService.getPostById(id);
+        if (post != null) {
+            return ResponseEntity.ok(post);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 }

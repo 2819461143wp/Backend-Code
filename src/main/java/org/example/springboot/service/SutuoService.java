@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SutuoService {
@@ -88,5 +91,30 @@ public class SutuoService {
         } catch (Exception e) {
             throw new RuntimeException("删除素拓记录失败: " + e.getMessage());
         }
+    }
+
+    public Map<String, Object> getAnalysisData() {
+        Map<String, Object> result = new HashMap<>();
+
+        // 获取总览数据
+        result.put("overview", sutuoMapper.getOverviewStats());
+
+        // 获取平均分
+        result.put("averageScore", sutuoMapper.getAverageScores());
+
+        // 获取维度平均分
+        result.put("dimensions", sutuoMapper.getDimensionsAverage());
+
+        // 获取统计数据并转换为列表
+        Map<String, Object> volunteerTrendMap = sutuoMapper.getVolunteerTrend();
+        result.put("volunteerTrend", new ArrayList<>(volunteerTrendMap.values()));
+
+        Map<String, Object> scoreRankingsMap = sutuoMapper.getTotalScoreRankings();
+        result.put("scoreRankings", new ArrayList<>(scoreRankingsMap.values()));
+
+        Map<String, Object> volunteerRankingsMap = sutuoMapper.getVolunteerTimeRankings();
+        result.put("volunteerRankings", new ArrayList<>(volunteerRankingsMap.values()));
+
+        return result;
     }
 }

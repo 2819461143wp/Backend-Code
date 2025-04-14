@@ -85,6 +85,9 @@ public class Sutuo {
     @ExcelProperty(value = "活动名称")
     private String activity;
 
+    @ExcelProperty(value = "活动日期")
+    private String date;
+
     @ExcelProperty(index = 5, converter = StringToIntegerConverter.class)
     private Integer deyu;
 

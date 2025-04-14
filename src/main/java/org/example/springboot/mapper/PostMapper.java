@@ -15,4 +15,10 @@ public interface PostMapper {
     // 获取所有帖子
     List<Post> getAllPosts();
     List<Post> getPosts(Integer status);
+
+    List<Post> adminGetAllPosts(@Param("title") String title,
+                           @Param("status") Integer status,
+                           @Param("allow") Integer allow);
+    int updatePostAllow(@Param("id") Integer id, @Param("allow") Integer allow);
+    int deletePost(@Param("id") Integer id);
 }

@@ -132,4 +132,15 @@ public class SutuoController {
             return ResponseEntity.internalServerError().body("删除出错：" + e.getMessage());
         }
     }
+
+    @GetMapping("/analysis")
+    public ResponseEntity<Map<String, Object>> getAnalysisData() {
+        try {
+            Map<String, Object> data = sutuoService.getAnalysisData();
+            return ResponseEntity.ok(data);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(Map.of("error", e.getMessage()));
+        }
+    }
 }

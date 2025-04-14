@@ -3,18 +3,17 @@
 <mapper namespace="org.example.springboot.mapper.SutuoMapper">
     <insert id="InsertSutuo">
         INSERT INTO sutuo
-        (student_id, activity, deyu, zhiyu, meiyu, tiyu, xiaoyuan, xiangtu,
+        (student_id, activity,date, deyu, zhiyu, meiyu, tiyu, xiaoyuan, xiangtu,
          chanxue, jiating, qingshi, volunteer_time, file_hash)
         VALUES
-            (#{studentId}, #{activity}, #{deyu}, #{zhiyu}, #{meiyu}, #{tiyu},
+            (#{studentId}, #{activity}, #{date},#{deyu}, #{zhiyu}, #{meiyu}, #{tiyu},
              #{xiaoyuan}, #{xiangtu}, #{chanxue}, #{jiating}, #{qingshi},
              #{volunteerTime}, #{fileHash})
     </insert>
 
     <update id="UpdateSutuo">
         UPDATE sutuo
-        SET activity = #{activity},
-            deyu = #{deyu},
+        SET deyu = #{deyu},
             zhiyu = #{zhiyu},
             meiyu = #{meiyu},
             tiyu = #{tiyu},
@@ -30,23 +29,9 @@
         DELETE FROM sutuo
         WHERE id = #{id}
     </delete>
+
     <select id="SelectSutuo" resultType="org.example.springboot.pojo.Sutuo">
-        SELECT
-            id,
-            student_id as studentId,
-            activity,
-            deyu,
-            zhiyu,
-            meiyu,
-            tiyu,
-            xiaoyuan,
-            xiangtu,
-            chanxue,
-            jiating,
-            qingshi,
-            CAST(volunteer_time AS DECIMAL(10,2)) as volunteer_time,
-            file_hash as fileHash
-        FROM sutuo
+        SELECT * FROM sutuo
         WHERE student_id = #{student_id}
         ORDER BY id DESC
             LIMIT 30
@@ -70,5 +55,84 @@
     <select id="getSutuoById" resultType="org.example.springboot.pojo.Sutuo">
         SELECT * FROM sutuo
         WHERE id = #{id}
+    </select>
+
+    <select id="getOverviewStats" resultType="java.util.Map">
+        SELECT
+            'total_students' as name,
+            COUNT(DISTINCT student_id) as value
+        FROM sutuo
+        UNION ALL
+        SELECT
+            'total_volunteer_time' as name,
+            SUM(volunteer_time) as value
+        FROM sutuo
+    </select>
+
+    <select id="getAverageScores" resultType="java.lang.Double">
+        SELECT AVG(deyu + zhiyu + meiyu + tiyu + xiaoyuan + xiangtu + chanxue + jiating + qingshi)
+        FROM sutuo
+    </select>
+
+    <select id="getDimensionsAverage" resultType="java.util.Map">
+        SELECT
+            'deyu' as dimension,
+            AVG(deyu) as average
+        FROM sutuo
+        UNION ALL
+        SELECT 'zhiyu', AVG(zhiyu)
+        FROM sutuo
+        UNION ALL
+        SELECT 'meiyu', AVG(meiyu)
+        FROM sutuo
+        UNION ALL
+        SELECT 'tiyu', AVG(tiyu)
+        FROM sutuo
+        UNION ALL
+        SELECT 'xiaoyuan', AVG(xiaoyuan)
+        FROM sutuo
+        UNION ALL
+        SELECT 'xiangtu', AVG(xiangtu)
+        FROM sutuo
+        UNION ALL
+        SELECT 'chanxue', AVG(chanxue)
+        FROM sutuo
+        UNION ALL
+        SELECT 'jiating', AVG(jiating)
+        FROM sutuo
+        UNION ALL
+        SELECT 'qingshi', AVG(qingshi)
+        FROM sutuo
+    </select>
+
+    <select id="getVolunteerTrend" resultType="java.util.Map">
+        SELECT
+            DATE_FORMAT(date, '%Y-%m') as month,
+        SUM(volunteer_time) as total_time
+        FROM sutuo
+        GROUP BY DATE_FORMAT(date, '%Y-%m')
+    </select>
+
+    <select id="getTotalScoreRankings" resultType="java.util.Map">
+        SELECT
+            s.student_id,
+            st.student_name,
+            SUM(s.deyu + s.zhiyu + s.meiyu + s.tiyu + s.xiaoyuan + s.xiangtu +
+                s.chanxue + s.jiating + s.qingshi) as total_score
+        FROM sutuo s
+                 JOIN students st ON s.student_id = st.id
+        GROUP BY s.student_id, st.student_name
+        ORDER BY total_score DESC
+    </select>
+
+    <select id="getVolunteerTimeRankings" resultType="java.util.Map">
+        SELECT
+            s.student_id,
+            st.student_name,
+            SUM(s.volunteer_time) as total_time
+        FROM sutuo s
+                 JOIN students st ON s.student_id = st.id
+        GROUP BY s.student_id, st.student_name
+        ORDER BY total_time DESC
     </select>
 </mapper>

@@ -18,10 +18,37 @@
     </select>
 
     <select id="getAllPosts" resultType="org.example.springboot.pojo.Post">
-        SELECT * FROM posts WHERE is_deleted = false ORDER BY created_at DESC
+        SELECT * FROM posts WHERE is_deleted = 0 AND allow = 1 ORDER BY created_at DESC
     </select>
 
     <select id="getPosts" resultType="org.example.springboot.pojo.Post">
-        SELECT * FROM posts WHERE status=#{status} AND is_deleted = false ORDER BY created_at DESC
+        SELECT * FROM posts WHERE status=#{status} AND is_deleted = 0 AND allow = 1 ORDER BY created_at DESC
     </select>
+
+    <select id="adminGetAllPosts" resultType="org.example.springboot.pojo.Post">
+        SELECT * FROM posts
+        WHERE is_deleted = 0
+        <if test="title != null and title != ''">
+            AND title LIKE CONCAT('%', #{title}, '%')
+        </if>
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        <if test="allow != null">
+            AND allow = #{allow}
+        </if>
+        ORDER BY created_at DESC
+    </select>
+
+    <update id="updatePostAllow">
+        UPDATE posts
+        SET allow = #{allow}
+        WHERE id = #{id}
+    </update>
+
+    <update id="deletePost">
+        UPDATE posts
+        SET is_deleted = 1
+        WHERE id = #{id}
+    </update>
 </mapper>

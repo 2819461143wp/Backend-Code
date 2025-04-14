@@ -44,17 +44,33 @@ public class PostService {
         return result > 0;
     }
 
-    // 分页获取帖子
+    // 分页获取总帖子
     public PageInfo<Post> getAllPostsByPage(Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         List<Post> posts = postMapper.getAllPosts();
         return new PageInfo<>(posts);
     }
-
+    //分页获取各部分的贴子
     public PageInfo<Post> getPostsByPage(Integer pageNum, Integer pageSize,Integer status) {
         PageHelper.startPage(pageNum, pageSize);
         List<Post> posts = postMapper.getPosts(status);
         return new PageInfo<>(posts);
+    }
+
+    public PageInfo<Post> adminGetAllPosts(int pageNum, int pageSize,
+                                      String title, Integer status, Integer allow) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<Post> posts = postMapper.adminGetAllPosts(title, status, allow);
+        return new PageInfo<>(posts);
+    }
+
+
+    public boolean updatePostAllow(Integer id, Integer allow) {
+        return postMapper.updatePostAllow(id, allow) > 0;
+    }
+
+    public boolean deletePost(Integer id) {
+        return postMapper.deletePost(id) > 0;
     }
 
 }

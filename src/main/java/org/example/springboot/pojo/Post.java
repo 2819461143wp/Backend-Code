@@ -14,4 +14,5 @@ public class Post {
     private String imageUrl;
     private Integer starsCount;
     private Integer status;
+    private Integer allow;
 }
