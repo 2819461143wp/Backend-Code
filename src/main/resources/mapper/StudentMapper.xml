@@ -37,4 +37,22 @@
         SELECT * FROM students
         WHERE user_id = #{user_id}
     </select>
+
+    <select id="selectStudentList" resultType="org.example.springboot.pojo.Student">
+        SELECT * FROM students
+        <where>
+            <if test="academy != null and academy != ''">
+                AND academy = #{academy}
+            </if>
+            <if test="className != null and className != ''">
+                AND class_name = #{className}
+            </if>
+            <if test="studentId != null and studentId != ''">
+                AND id = #{studentId}
+            </if>
+            <if test="studentName != null and studentName != ''">
+                AND student_name LIKE CONCAT('%', #{studentName}, '%')
+            </if>
+        </where>
+    </select>
 </mapper>

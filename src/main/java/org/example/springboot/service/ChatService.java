@@ -12,18 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-//import org.springframework.ai.chat.ChatClient;
-////import org.springframework.ai.chat.ChatResponse;
-//import org.springframework.ai.chat.messages.Message;
-//import org.springframework.ai.chat.messages.UserMessage;
-//import org.springframework.ai.chat.messages.SystemMessage;
-//import org.springframework.beans.factory.annotation.Autowired;
-//
-
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -34,8 +24,9 @@ public class ChatService {
 
     @Autowired
     private ChatMapper chatMapper;
-//    @Autowired
-//    private ChatClient chatClient;
+
+    @Autowired
+    private DocumentIndexService documentIndexService;
 
     private final OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(90, TimeUnit.SECONDS)
@@ -80,7 +71,7 @@ public class ChatService {
             chatMapper.insertMessage(userMessage);
 
             // 调用AI API
-            String aiResponse = callDeepseekAPI(message);
+            String aiResponse = callDeepseekAPI(message,conversationId);
 
             // 保存AI响应
             ChatMessage aiMessage = new ChatMessage();
@@ -111,71 +102,63 @@ public class ChatService {
             return response;
         }
     }
-//    private String callDeepseekAPI(String message) {
-//        Message systemMessage = new SystemMessage("You are a helpful assistant");
-//        Message userMessage = new UserMessage(message);
-//        List<Message> messages = new ArrayList<>();
-//        messages.add(systemMessage);
-//        messages.add(userMessage);
-//
-//        org.springframework.ai.chat.ChatResponse response = chatClient.generate(messages);
-//        return response.getGeneration().getContent();
-//    }
 
-    private String callDeepseekAPI(String message) throws Exception {
-        // 创建请求体的 JSON 对象
+    private String callDeepseekAPI(String message, Long conversationId) throws Exception {
+        // 检索相关文档内容
+        List<String> relevantDocs = documentIndexService.searchRelevantContent(message);
+
         ObjectNode requestBody = objectMapper.createObjectNode();
-        // 创建消息数组
         ArrayNode messages = requestBody.putArray("messages");
 
-        // 添加 system 消息，设定 AI 角色
+        // 添加系统消息和上下文
         ObjectNode systemMessage = messages.addObject();
         systemMessage.put("role", "system");
-        systemMessage.put("content", "You are a helpful assistant");
+        systemMessage.put("content", "You are a helpful assistant. " +
+                "Please use the following context to answer the question: \n" +
+                String.join("\n", relevantDocs));
 
-        // 添加用户消息
+        // 获取并添加历史消息（最多10条）
+        if (conversationId != null) {
+            List<ChatMessage> historicalMessages = chatMapper.selectMessagesByConversationId(conversationId);
+            int startIndex = Math.max(0, historicalMessages.size() - 10);
+            for (int i = startIndex; i < historicalMessages.size(); i++) {
+                ChatMessage historicalMessage = historicalMessages.get(i);
+                ObjectNode historyNode = messages.addObject();
+                historyNode.put("role", historicalMessage.getRole());
+                historyNode.put("content", historicalMessage.getContent());
+            }
+        }
+
+        // 添加当前用户消息
         ObjectNode userMessage = messages.addObject();
         userMessage.put("role", "user");
         userMessage.put("content", message);
 
-        // 设置模型名称
+        // 设置API请求参数
         requestBody.put("model", "deepseek-chat");
-        // 设置频率惩罚参数
         requestBody.put("frequency_penalty", 0);
-        // 设置最大 token 数
         requestBody.put("max_tokens", 2048);
-        // 设置存在惩罚参数
         requestBody.put("presence_penalty", 0);
 
         // 设置响应格式
         ObjectNode responseFormat = requestBody.putObject("response_format");
         responseFormat.put("type", "text");
 
-        // 设置停止标记为 null
+        // 设置其他参数
         requestBody.putNull("stop");
-        // 设置是否流式传输
         requestBody.put("stream", false);
-        // 设置流选项为 null
         requestBody.putNull("stream_options");
-        // 设置温度参数
         requestBody.put("temperature", 1);
-        // 设置 top_p 参数
         requestBody.put("top_p", 1);
-        // 设置工具为 null
         requestBody.putNull("tools");
-        // 设置工具选择
         requestBody.put("tool_choice", "none");
-        // 设置是否返回 log 概率
         requestBody.put("logprobs", false);
-        // 设置 top_logprobs 为 null
         requestBody.putNull("top_logprobs");
 
-        // 设置请求的媒体类型为 JSON
+        // 发送API请求
         MediaType mediaType = MediaType.parse("application/json");
-        // 创建请求体
         RequestBody body = RequestBody.create(mediaType, requestBody.toString());
 
-        // 构建 HTTP 请求
         Request request = new Request.Builder()
                 .url("https://api.deepseek.com/chat/completions")
                 .post(body)
@@ -184,16 +167,13 @@ public class ChatService {
                 .addHeader("Authorization", "Bearer " + apiKey)
                 .build();
 
-        // 发送请求并处理响应
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) {
                 throw new Exception("API调用失败: " + response.code());
             }
 
-            // 解析响应 JSON
             ObjectNode responseJson = objectMapper.readValue(
                     response.body().string(), ObjectNode.class);
-            // 返回 AI 响应内容
             return responseJson.path("choices").get(0).path("message").path("content").asText();
         }
     }

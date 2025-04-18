@@ -64,6 +64,7 @@ CREATE TABLE file_records (
 CREATE TABLE posts (
                        id INT AUTO_INCREMENT PRIMARY KEY,
                        user_id INT,              -- 发帖用户的ID（外键）
+                       character_id INT,         -- 关联的角色ID（外键）
                        title VARCHAR(255),       -- 帖子标题
                        content TEXT,             -- 帖子内容
                        image_count INT DEFAULT 0, -- 帖子包含的图片数量（可选）
@@ -71,7 +72,9 @@ CREATE TABLE posts (
                        updated_at TIMESTAMP,     -- 更新时间
                        is_deleted BOOLEAN DEFAULT 0, -- 是否删除标记
                        status INT DEFAULT 0,     -- 将中文逗号替换为正确的英文逗号
+                       allow INT DEFAULT 0,      --
                        FOREIGN KEY (user_id) REFERENCES users(id)
+                       FOREIGN KEY (character_id) REFERENCES characters(id)
 );
 
 CREATE TABLE comments (
