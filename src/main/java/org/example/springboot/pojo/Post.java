@@ -15,4 +15,7 @@ public class Post {
     private Integer starsCount;
     private Integer status;
     private Integer allow;
+    private Integer likesCount;
+    private Integer favoritesCount;
+    private Integer commentsCount;
 }

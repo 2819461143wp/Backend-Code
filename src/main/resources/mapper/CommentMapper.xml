@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.example.springboot.mapper.CommentMapper">
+    <insert id="insertComment">
+        INSERT INTO comments (user_id, post_id, content, created_at)
+        VALUES (#{userId}, #{postId}, #{content}, #{createdAt})
+    </insert>
+    <delete id="deleteComment">
+        DELETE FROM comments
+        WHERE id = #{id}
+    </delete>
+    <select id="getPostComments" resultType="org.example.springboot.pojo.Comment">
+        SELECT
+            c.*,
+            ch.name as characterName,
+            ch.avatar_url as characterAvatar
+        FROM comments c
+                 LEFT JOIN characters ch ON c.user_id = ch.user_id
+        WHERE c.post_id = #{postId}
+    </select>
+
+    <select id="getUserComments" resultType="org.example.springboot.pojo.Comment">
+        SELECT
+            c.*,
+            ch.name as characterName,
+            ch.avatar_url as characterAvatar
+        FROM comments c
+                 LEFT JOIN characters ch ON c.user_id = ch.user_id
+        WHERE c.user_id = #{userId}
+    </select>
+
+    <select id="getCommentById" resultType="org.example.springboot.pojo.Comment">
+        SELECT
+            c.*,
+            ch.name as characterName,
+            ch.avatar_url as characterAvatar
+        FROM comments c
+                 LEFT JOIN characters ch ON c.user_id = ch.user_id
+        WHERE c.id = #{id}
+    </select>
+</mapper>

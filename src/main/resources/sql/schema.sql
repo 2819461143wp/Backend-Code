@@ -77,14 +77,32 @@ CREATE TABLE posts (
                        FOREIGN KEY (character_id) REFERENCES characters(id)
 );
 
-CREATE TABLE comments (
-                          id INT AUTO_INCREMENT PRIMARY KEY,
-                          post_id INT,              -- 评论所属帖子ID（外键）
-                          user_id INT,              -- 评论用户的ID
-                          content TEXT,             -- 评论内容
-                          created_at TIMESTAMP,     -- 评论时间
-                          FOREIGN KEY (post_id) REFERENCES posts(id),
-                          FOREIGN KEY (user_id) REFERENCES users(id)
+-- 点赞表
+CREATE TABLE `likes` (
+                         `id` INT PRIMARY KEY AUTO_INCREMENT,
+                         `user_id` INT NOT NULL,
+                         `post_id` INT NOT NULL,
+                         `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+                         UNIQUE KEY `unique_like` (`user_id`, `post_id`) -- 防止重复点赞
+);
+
+-- 收藏表
+CREATE TABLE `favorites` (
+                             `id` INT PRIMARY KEY AUTO_INCREMENT,
+                             `user_id` INT NOT NULL,
+                             `post_id` INT NOT NULL,
+                             `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+                             UNIQUE KEY `unique_favorite` (`user_id`, `post_id`)
+);
+
+-- 评论表
+CREATE TABLE `comments` (
+                            `id` INT PRIMARY KEY AUTO_INCREMENT,
+                            `user_id` INT NOT NULL,
+                            `post_id` INT NOT NULL,
+                            `content` TEXT NOT NULL,
+                            `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+                            `is_deleted` TINYINT DEFAULT 0
 );
 
 -- 聊天会话表

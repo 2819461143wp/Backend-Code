@@ -1,9 +1,17 @@
 package org.example.springboot.pojo;
 
+import lombok.Data;
+
+import java.time.LocalDateTime;
+
+@Data
 public class Comment {
     private Integer id;
-    private String post_id;
-    private Integer user_id;
+    private Integer userId;
+    private Integer postId;
     private String content;
-    private String created_at;
+    private LocalDateTime createdAt;
+    private Integer allow;
+    private String characterName;
+    private String characterAvatar;
 }

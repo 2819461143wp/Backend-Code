@@ -51,4 +51,36 @@
         SET is_deleted = 1
         WHERE id = #{id}
     </update>
+
+    <update id="incrementLikesCount">
+        UPDATE posts
+        SET likes_count = likes_count + 1
+        WHERE id = #{id}
+    </update>
+
+    <update id="decrementLikesCount">
+        UPDATE posts
+        SET likes_count = likes_count - 1
+        WHERE id = #{id}
+    </update>
+    <update id="incrementFavoritesCount">
+        UPDATE posts
+        SET favorites_count = favorites_count + 1
+        WHERE id = #{id}
+    </update>
+    <update id="decrementFavoritesCount">
+        UPDATE posts
+        SET favorites_count = favorites_count - 1
+        WHERE id = #{id}
+    </update>
+    <update id="incrementCommentsCount">
+        UPDATE posts
+        SET comments_count = comments_count + 1
+        WHERE id = #{id}
+    </update>
+    <update id="decrementCommentsCount">
+        UPDATE posts
+        SET comments_count = comments_count - 1
+        WHERE id = #{id}
+    </update>
 </mapper>

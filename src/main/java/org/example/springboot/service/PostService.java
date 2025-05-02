@@ -2,7 +2,9 @@ package org.example.springboot.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.example.springboot.mapper.LikeMapper;
 import org.example.springboot.mapper.PostMapper;
+import org.example.springboot.pojo.Like;
 import org.example.springboot.pojo.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,9 @@ import java.util.List;
 public class PostService {
     @Autowired
     private PostMapper postMapper;
+
+    @Autowired
+    private LikeMapper likeMapper;
 
     // 根据ID获取帖子
     public Post getPostById(Integer id) {
@@ -72,5 +77,4 @@ public class PostService {
     public boolean deletePost(Integer id) {
         return postMapper.deletePost(id) > 0;
     }
-
 }

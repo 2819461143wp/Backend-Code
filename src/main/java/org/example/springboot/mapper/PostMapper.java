@@ -21,4 +21,10 @@ public interface PostMapper {
                            @Param("allow") Integer allow);
     int updatePostAllow(@Param("id") Integer id, @Param("allow") Integer allow);
     int deletePost(@Param("id") Integer id);
+    int incrementLikesCount(@Param("id") Integer id);
+    int decrementLikesCount(@Param("id") Integer id);
+    int incrementFavoritesCount(@Param("id") Integer id);
+    int decrementFavoritesCount(@Param("id") Integer id);
+    int incrementCommentsCount(@Param("id") Integer id);
+    int decrementCommentsCount(@Param("id") Integer id);
 }
